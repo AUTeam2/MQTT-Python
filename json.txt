@@ -1,0 +1,11 @@
+{
+	"protocolVersion": "1.0",
+	"sentBy": "Tommy",
+	"msgType": "Command",
+	"commandList": ["a", "b", "c"],
+	"statusCode": "1",
+	"parameterObj": "",
+	"dataObj": "",
+	"embeddedFileFormat": "",
+	"embeddedFile": ""
+}
