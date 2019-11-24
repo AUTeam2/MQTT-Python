@@ -7,7 +7,7 @@ class MqttClient():
 
     # These should be gotten from the environment or, ideally, from the Django settings file
     broker_address = "auteam2.mooo.com"
-    broker_port = 9001
+    broker_port = 1883
     username = "team2"
     password = "team2"
     will_message = "I'm Dying"
