@@ -100,7 +100,7 @@ The client subscribes to a topic can choose level of QoS default is 0
 subscribe(topic, qos=0)
 
 """
-client.publish("tester//42", "Test message for team2")
+client.publish("tester//42", "Test message from team2")
 """
 The client publish a message to a topic can choose a level of QoS
 
