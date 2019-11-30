@@ -1,5 +1,6 @@
 import json
 import sys
+
 import jsonschema
 from jsonschema import validate
 
@@ -7,11 +8,10 @@ jscheman = "json.schema"
 jsondata = "package.json"
 
 
-def loadschema(jschema):
+def load_schema(jschema):
     with open(jschema, 'r', encoding="utf-8") as f:
-        schemadata = f.read()
-        pschema = json.loads(schemadata)
-    return pschema
+        # schemadata = f.read()
+        return json.loads(f.read())
 
 
 # Testdata formatted as json(no errors)
@@ -23,16 +23,25 @@ data2 = {"protocolVersion": 2.0, "msgType": "Dos", "commandList": "Go away!",
 
 
 # Function to make a json file, it'll be called package.json
-def writeToJsonFile(outputfile, data):
+def write_jsonfile(outputfile, data):
     with open(outputfile, 'w', encoding="utf-8") as jsonFile:
         json.dump(data, jsonFile)
 
 
+# Writes a json string
+def write_jsonstr(var):
+    return json.dumps(var)
+
+
+# Reads a json string
+def read_jsonstr(var):
+    return json.loads(var)
+
+
 # Function to read from a json file, its called package.json
-def readFromJsonFile(inputfile):
+def read_jsonfile(inputfile):
     with open(inputfile, 'r', encoding="utf-8") as datafile:
-        loaded = json.load(datafile)
-    return loaded
+        return json.load(datafile)
 
 
 # Function for validating jsondata - it returns an error if it doens't fit the schema
@@ -44,13 +53,3 @@ def validering(jsondata, schema):
     except jsonschema.exceptions.ValidationError as ve:
         sys.stderr.write("Record #{}: ERROR\n".format(jsondata))
         sys.stderr.write(str(ve) + "\n")
-
-
-# Teststuff
-#schema = loadschema(jscheman)
-#writeToJsonFile("faultypackage.json", data2)
-#writeToJsonFile("okpackage.json", data1)
-#data = readFromJsonFile("okpackage.json")
-#validering(readFromJsonFile("okpackage.json"), loadschema(jscheman))
-#intake = readFromJsonFile("faultypackage.json")
-#validering(intake, schema)

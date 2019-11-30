@@ -1,58 +1,68 @@
-import jsonschematest
-import PahoMqttTest
+import time
 import paho.mqtt.client as mqtt
-import json
+import jsonschematest as jss
 
-
-testData1 = jsonschematest.data1
-testData2 = jsonschematest.data2
+testData1 = jss.data1
+testData2 = jss.data2
 
 schemafile = "json.schema"
 badpackage = "bad.json"
 goodpackage = "good.json"
 
-
 print(testData1)
 
-schema = jsonschematest.loadschema(schemafile)
-jsonschematest.writeToJsonFile(goodpackage, testData1)
-data = jsonschematest.readFromJsonFile(goodpackage)
-jsonschematest.validering(data, schema)
+schema = jss.load_schema(schemafile)
+jss.write_jsonfile(goodpackage, testData1)
+jss.write_jsonfile(badpackage, testData2)
+
+data = jss.read_jsonfile(goodpackage)
+jss.validering(data, schema)
 
 
+def on_log(client, userdata, level, buf):
+    print("log: " + buf)
 
-#broker = '119.74.164.55'
-PahoMqttTest.broker = 'auteam2.mooo.com'
+
+def on_connect(client, userdata, falgs, rc):
+    if rc == 0:
+        print("Connected OK")
+    else:
+        print("Bad connection The return code is: ", rc)
+
+
+def on_disconnect(client, userdata, flags, rc=0):
+    print("DisConnected result code " + str(rc))
+
+
+def on_message(client, userdata, msg):
+    topic = msg.topic
+    m_decode = str(msg.payload.decode("utf-8", "ignore"))
+    print("message received", m_decode)
+    jss.validering(jss.read_jsonstr(m_decode), schema)
+
+
+# Janus test server get named broker
+# broker = '119.74.164.55'
+broker = 'auteam2.mooo.com'
 # Create new instance
-PahoMqttTest.client = mqtt.Client("Testpython")
-PahoMqttTest.client.username_pw_set("team2", "team2")
-PahoMqttTest.client.on_connect = PahoMqttTest.on_connect
-PahoMqttTest.client.on_disconnect = PahoMqttTest.on_disconnect
-# client.on_log = on_log
-PahoMqttTest.client.on_message = PahoMqttTest.on_message
-print("Connecting to broker ", PahoMqttTest.broker)
+client = mqtt.Client("Testpython")
+client.username_pw_set("team2", "team2")
+client.on_connect = on_connect
+client.on_disconnect = on_disconnect
+#client.on_log = on_log
+client.on_message = on_message
+print("Connecting to broker ", broker)
 # Connecting to broker
-PahoMqttTest.client.connect(PahoMqttTest.broker)
+client.connect(broker)
 # starting loop for the callback to be processed
-PahoMqttTest.client.loop_start()
-PahoMqttTest.client.subscribe("tester//42")
-"""
-The client subscribes to a topic can choose level of QoS default is 0
-subscribe(topic, qos=0)
+client.loop_start()
+client.subscribe("tester//42")
 
-"""
-PahoMqttTest.client.publish("tester//42", json.dumps(data))
-"""
-The client publish a message to a topic can choose a level of QoS
+client.publish("tester//42", str(jss.write_jsonstr(data)))
 
-This function can take four parameters seen in the brackets:
-publish(topic, payload=None, qos=0, retain=False)
-The only parameters you must supply are the topic, and the payload.
-The payload is the message you want to publish.
-"""
 # w8 5 sec
-PahoMqttTest.time.sleep(5)
+time.sleep(5)
 # ending loop
-PahoMqttTest.client.loop_stop()
+client.loop_stop()
 # Disconnect from server
-PahoMqttTest.client.disconnect()
+client.disconnect()
