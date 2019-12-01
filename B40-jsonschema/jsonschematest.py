@@ -4,48 +4,88 @@ import sys
 import jsonschema
 from jsonschema import validate
 
-jscheman = "json.schema"
-jsondata = "package.json"
+"""
+Jsonschematest
+
+Contains functions to import a jsonschema, 
+read/write json files and strings and to validate those.
+"""
 
 
+# Function to load a jsonschema
 def load_schema(jschema):
+    """
+    Loads jsonschema from file
+
+    :param jschema:
+    Takes a filename as a string
+    :return:
+    """
     with open(jschema, 'r', encoding="utf-8") as f:
-        # schemadata = f.read()
         return json.loads(f.read())
-
-
-# Testdata formatted as json(no errors)
-data1 = {"protocolVersion": 1.0, "sentBy": "Tommy", "msgType": "Command", "commandList": "Run, along!",
-         "statusCode": "I'm OK!", "parameterObj": {}, "dataObj": {}, "embeddedFileFormat": "", "embeddedFile": ""}
-# Testdata formatted as json(with error in dataObj - it is formatted as a string and sentBy is missing)
-data2 = {"protocolVersion": 2.0, "msgType": "Dos", "commandList": "Go away!",
-         "statusCode": "I'm not OK!", "parameterObj": {}, "dataObj": "", "embeddedFileFormat": "", "embeddedFile": ""}
 
 
 # Function to make a json file, it'll be called package.json
 def write_jsonfile(outputfile, data):
+    """
+    Write "jsonly" correct json files
+
+    :param outputfile:
+    Name of the file to be as a string
+    :param data:
+    Data to be jsonly written in the file
+    :return:
+    """
     with open(outputfile, 'w', encoding="utf-8") as jsonFile:
         json.dump(data, jsonFile)
 
 
 # Writes a json string
 def write_jsonstr(var):
+    """
+    Write "jsonly" correct json string
+
+    :param var:
+    :return:
+    """
     return json.dumps(var)
 
 
 # Reads a json string
 def read_jsonstr(var):
+    """
+    Read json-data from string
+
+    :param var:
+    :return:
+    """
     return json.loads(var)
 
 
 # Function to read from a json file, its called package.json
 def read_jsonfile(inputfile):
+    """
+    Read json-data from file
+
+    :param inputfile:
+    Json file containing data
+    :return:
+    """
     with open(inputfile, 'r', encoding="utf-8") as datafile:
         return json.load(datafile)
 
 
 # Function for validating jsondata - it returns an error if it doens't fit the schema
 def validering(jsondata, schema):
+    """
+    Validates json-data against schema
+
+    :param jsondata:
+    The variable containing json-data
+    :param schema:
+    The schema to compare against
+    :return:
+    """
     print("Validating the input data using jsonschema:")
     try:
         validate(jsondata, schema)
