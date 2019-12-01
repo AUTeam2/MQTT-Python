@@ -28,7 +28,7 @@ def on_log(client, userdata, level, buf):
     print("log: " + buf)
 
 
-def on_connect(client, userdata, falgs, rc):
+def on_connect(client, userdata, flags, rc):
     """
     Connects to the broker and prints the result
 
